@@ -54,3 +54,46 @@ SessionFactory es un objeto thread safe compartido por todos los threads de la a
 ## Session Object
 
 El SessionObject es un objeto instanciado por SessionFactory utilizado para obtener una conexión a la base de datos. Este objeto es lightweight, es decir esta diseñado para ser instanciado cada vez que se quiera acceder a la base de datos. No esta diseñado para ser mantenido por mucho tiempo ya que no es thread safe y debería ser creado y destruido cuando se necesite.
+
+# Estado de una entidad
+
+Las entidades de hibernate tienen un ciclo de vida en la cual va cambiando de estado y cambiando de propiedades. También hay ciertas operaciones que le ocurren a la entidad durante el ciclo de vida, estas son `Detach`. `Merge`, `Persist`, `Remove`, `Refresh`.
+
+### Detach
+
+Si se le hace detach a la entidad, esta deja estar vinculada a la la sesión de hibernate.
+
+### Merge
+
+Si una instancia es desvinculada de una sesión entonce merge la vincula nuevamente.
+
+### Persist
+
+Permite tomar una nueva instancia de la entidad y transicionarla a un estado `managed`. En estado se guardara en la base de datos si se ejecuta flush/commit.
+
+### Remove
+
+Transiciona una entidad `managed` y la elimina. El próximo flush/commit se eliminará de la base de datos.
+
+### Refresh
+
+Recarga/sincroniza un objeto con datos de la base de datos. Sirve para recuperar consistencia entre los objetos que usamos y los datos
+
+![image](https://dev-mind.fr/img/training/spring-intro/lifecycle-e9f1372424.png)
+
+| <b>Image Credits - Fig.2 - [dev-mind.fr](https://dev-mind.fr/training/spring/spring-data.html)</b>|
+
+## Cascada de operaciones
+
+La cascada es un forma de aplicar operaciones a entidades relacionadas. Por ejemplo si modificamos un elemento de la tabla `instructor` no interesa también guardar los elementos relacionados de la tabla `instructor_detail`. Este caso es importante ya que en el caso de eliminar un instructor también debemos eliminar su correspondiente detalle.
+
+### Tipos de Cascada
+
+- PERSIST: si la entidad es guardada la entidad relacionada también se guardará.
+- REMOVE: si la entidad de borrada la relacionada también.
+- REFRESH: si recarga la entidad original la relacionada también.
+- DETACH: ...
+- MERGE: ...
+- ALL: incluye todos los tipos de cascada que se muestran arriba.
+
+Por default ninguna operación hace cascada, es algo que debemos agregar con la annotation `OneToOne(cascade=CascadeType.ALL)` especificando el tipo de cascada.
