@@ -97,3 +97,30 @@ La cascada es un forma de aplicar operaciones a entidades relacionadas. Por ejem
 - ALL: incluye todos los tipos de cascada que se muestran arriba.
 
 Por default ninguna operación hace cascada, es algo que debemos agregar con la annotation `OneToOne(cascade=CascadeType.ALL)` especificando el tipo de cascada.
+
+## Tipos de carga de datos
+
+Existen dos formas de hacer un fetch de la base de datoes, Eager y Lazy loading.
+
+### Eager Loading
+
+Va a cargar de una todas las entidades dependientes a la que estoy cargando. Puede ser usado cuando tenemos una cantidad pequeña de elementos pero si el numero crece puede afectar la performance.
+
+Por ejemplo si queremos cargar una lista de cursos y estos tienen una carga eager, deberíamos cargar también todos los estudiantes de estos, ya que es una entidad dependiente.
+
+En estos casos se prefiere la carga lazy.
+
+### Lazy loading
+
+Lazy loading va a cargar la entidad principal primero y luego a medida que se vaya demandando va a cargar las entidades dependientes. Cuando hacemos lazy loading es necesario que haya una sesión de hibernate abierta para poder traer datos cuando sea necesario. Si tratamos de obtener datos de forma lazy con una sesión cerrada hibernate va a tirar una excepción.
+
+### Valores por defecto
+
+Este comportamiento puede ser sobrescrito pasándola a la annotation el parámetro `fetchType`
+
+|    Mapping    | Default Fetch Type |
+| :-----------: | ------------------ |
+|  `@OneToOne`  | FetchType.EAGER    |
+| `@OneToMany`  | FetchType.LAZY     |
+| `@ManyToOne`  | FetchType.EAGER    |
+| `@ManyToMany` | FetchType.LAZY     |
