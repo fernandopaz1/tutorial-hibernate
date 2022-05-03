@@ -1,0 +1,50 @@
+package com.luv2code.hibernate.demo.manyToOne.Bi;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+import com.luv2code.hibernate.demo.entity.Course;
+import com.luv2code.hibernate.demo.entity.Instructor;
+import com.luv2code.hibernate.demo.entity.InstructorDetail;
+
+public class DeleteCourseDemo {
+
+public static void main(String[] args) {
+		
+		// creamos la SessionFactory
+		// si no especificamos el nombre del archivo de configuraciones
+		// por defecto busca el nombre hibernate.cfg.xml
+		SessionFactory factory  = new Configuration()
+								  .configure("hibernate.cfg.xml")
+								  .addAnnotatedClass(Instructor.class)
+								  .addAnnotatedClass(InstructorDetail.class)
+								  .addAnnotatedClass(Course.class)
+								  .buildSessionFactory();
+
+		// creamos la session
+		Session session = factory.getCurrentSession();
+		
+		try {
+			// usamos la session para guardar un objeto java
+			
+			session.beginTransaction();
+
+			// obtenemos el curso de la base de datos
+			int theId = 12;
+			Course tempCourse = session.get(Course.class, theId);
+			
+			// borramos el curso
+			session.delete(tempCourse);
+			  
+			
+			session.getTransaction().commit();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.close();
+			factory.close(); 
+		}
+	}
+}
